@@ -4,22 +4,38 @@
 
 import("//packages/package.gni")
 
+config("iozone_config") {
+  cflags = [
+    "-Wno-sign-compare",
+    "-Wno-unused-variable",
+  ]
+}
+
 executable("iozone_bin") {
   output_name = "iozone"
 
   sources = [
     "src/current/iozone.c",
+    "src/current/libbif.c",
   ]
 
   defines = [
-    "NO_SIGNAL"
+    "NO_SIGNAL",
+    "NO_THREADS",
+    "HAVE_ANSIC_C",
+    "unix",
+    "NAME=\"fuchsia\"",
   ]
+
+  configs += [ ":iozone_config" ]
 }
 
 executable("fileop") {
   sources = [
     "src/current/fileop.c",
   ]
+
+  configs += [ ":iozone_config" ]
 }
 
 package("iozone") {

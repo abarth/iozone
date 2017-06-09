@@ -70,7 +70,7 @@
 #include <windows.h>
 #include <errno.h>
 #else
-#if defined(linux) || defined(solaris) || defined(IOZ_macosx) || defined(__AIX__) || defined(__FreeBSD__) || defined(_HPUX_SOURCE) || defined(__OpenBSD__) || defined(__DragonFly__) || defined(__NetBSD__)
+#if defined(linux) || defined(solaris) || defined(IOZ_macosx) || defined(__AIX__) || defined(__FreeBSD__) || defined(_HPUX_SOURCE) || defined(__OpenBSD__) || defined(__DragonFly__) || defined(__NetBSD__) || defined(__Fuchsia__)
 #include <errno.h>
 #else
 extern  int errno;   /* imported for errors */
@@ -292,7 +292,7 @@ THISVERSION,
 #if !defined(__FreeBSD__) && !defined(__OpenBSD__) && !defined(__APPLE__) && !defined(__DragonFly__)
 #include <malloc.h>
 #endif
-#if defined(__FreeBSD__) || defined(__OpenBSD__) || defined(__APPLE__) || defined(__DragonFly__) || defined(__NetBSD__)
+#if defined(__FreeBSD__) || defined(__OpenBSD__) || defined(__APPLE__) || defined(__DragonFly__) || defined(__NetBSD__) || defined(__Fuchsia__)
 #include <stdlib.h>
 #include <string.h>
 #endif
@@ -412,6 +412,7 @@ typedef long long off64_t;
 #endif
 
 #include <sys/time.h>
+#include <time.h>
 
 #ifdef SHARED_MEM
 #include <sys/shm.h>
@@ -1043,7 +1044,7 @@ long long l_max(long long,long long);
 void Kill(long long,long long);
 long long l_min(long long,long long);
 void multi_throughput_test(long long,long long);
-long long mythread_create( void *, int );
+long long mythread_create(void *(*func)(void *), int );
 int thread_exit(void);
 void get_resolution(void);
 #ifndef NO_THREADS
@@ -1253,6 +1254,8 @@ void async_init();
 size_t async_write();
 size_t async_write_no_copy();
 void async_release();
+int async_read();
+int async_read_no_copy();
 #endif
 void do_float();
 int create_xls();
@@ -12533,7 +12536,7 @@ int shared_flag;
 		exit(122);
 	}
 	if(debug1)
-		printf("Got shared memory for size %d\n",size1);
+		printf("Got shared memory for size %lld\n",size1);
 
 	return(addr);
 #endif
