@@ -3,6 +3,7 @@
 #include <fcntl.h>
 #include <unistd.h>
 #include <limits.h>
+#include <sys/stat.h>
 #include <fs-management/mount.h>
 #include <fs-management/ramdisk.h>
 
@@ -17,7 +18,9 @@ int main(int argc, const char** argv) {
   int dev = open(ramdisk_path, O_RDWR);
   printf("open => %d\n", dev);
 
-  status = mount(dev, "/tmp/minfs", DISK_FORMAT_MINFS, &default_mount_options, launch_stdio_sync);
+  mkdir("/tmp/minfs", 0755);
+
+  status = mount(dev, "/tmp/minfs", DISK_FORMAT_MINFS, &default_mount_options, launch_logs_async);
   printf("mount(DISK_FORMAT_MINFS) => %d\n", status);
 
   rv = create_ramdisk("test-fat", ramdisk_path, 512, (1 << 23));
@@ -29,7 +32,9 @@ int main(int argc, const char** argv) {
   dev = open(ramdisk_path, O_RDWR);
   printf("open => %d\n", dev);
 
-  status = mount(dev, "/tmp/fatfs", DISK_FORMAT_FAT, &default_mount_options, launch_stdio_sync);
+  mkdir("/tmp/fatfs", 0755);
+
+  status = mount(dev, "/tmp/fatfs", DISK_FORMAT_FAT, &default_mount_options, launch_logs_async);
   printf("mount(DISK_FORMAT_FAT) => %d\n", status);
 
   return 0;
