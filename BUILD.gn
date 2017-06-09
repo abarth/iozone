@@ -65,5 +65,9 @@ package("iozone") {
     {
       name = "ready"
     },
+    {
+      name = "test.sh"
+      source = "../../third_party/iozone/src/test.sh"
+    },
   ]
 }
