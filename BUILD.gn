@@ -38,9 +38,20 @@ executable("fileop") {
   configs += [ ":iozone_config" ]
 }
 
+executable("ready") {
+  sources = [
+    "src/ready.cc",
+  ]
+
+  deps = [
+    "//magenta/system/ulib/fs-management",
+  ]
+}
+
 package("iozone") {
   deps = [
     ":fileop",
+    ":ready",
     ":iozone_bin",
   ]
 
@@ -50,6 +61,9 @@ package("iozone") {
     },
     {
       name = "fileop"
+    },
+    {
+      name = "ready"
     },
   ]
 }
